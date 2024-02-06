@@ -4,7 +4,6 @@ import { IoHeart } from "react-icons/io5";
 
 
 const IsFavourite = ({favourite, favour, handleClick}) => {
-  console.log("favourite in is", favourite)
   return (
     <>
             { favourite.length> 0  ? (

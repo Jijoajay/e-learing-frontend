@@ -9,23 +9,15 @@ const VideoContent = ({videoContent,setVideoContent,handleRemoveVideo}) => {
     const [videoLink, setVideoLink] = useState("");
     const [videoDescription, setVideoDescription] = useState("");
     const [video, setVideo] = useState(null);
-    useEffect(() => {
-      console.log("videoLinkEffect", videoLink);
-    }, [videoLink]);
-
     const handleAddVideo = async (e) => {
       try {
-        console.log(video)
         if (video) {
           const videoRef = ref(storage, `course-video/${video.name}`);
-          console.log(videoRef);
-          
           try {
             await uploadBytes(videoRef, video);
             alert("video uploaded");
             
             const videoUrl = await getDownloadURL(videoRef);
-            console.log(videoUrl);
             setVideoLink(videoUrl);
             if (sectionTitle !== "") {
               const newVideoEntry = {
@@ -40,7 +32,6 @@ const VideoContent = ({videoContent,setVideoContent,handleRemoveVideo}) => {
               };
     
               setVideo(null);
-              console.log("entry", newVideoEntry);
               setVideoContent([...videoContent, newVideoEntry]);
               setSectionTitle("");
               setVideoTitle("");
@@ -54,7 +45,6 @@ const VideoContent = ({videoContent,setVideoContent,handleRemoveVideo}) => {
                   videoLink: videoUrl,
                   videoDescription: videoDescription,
                 };
-                console.log("newSubtitleEntry", newSubtitleEntry);
                 setVideo(null);
                 setVideoContent((prevContent) => {
                   const updatedContent = [...prevContent];

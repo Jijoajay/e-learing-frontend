@@ -12,7 +12,6 @@ const EditVideoContent = ({editVideoContent,setEditVideoContent,handleSubmit, ha
     const handleAddVideo = async()=>{
       if(video){
         const videoRef = ref(storage, 'course-video/')
-        console.log(videoRef)
         try{
           await uploadBytes(videoRef, video)
           alert("video uploaded")
@@ -27,7 +26,6 @@ const EditVideoContent = ({editVideoContent,setEditVideoContent,handleSubmit, ha
                 }
                 ] 
             }
-            console.log(newVideoEntry)
             setVideo(null)
             setEditVideoContent([...editVideoContent , newVideoEntry])
             setSectionTitle("")

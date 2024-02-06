@@ -15,7 +15,7 @@ import {motion, AnimatePresence} from  "framer-motion";
 import { DataContext } from '../context/DataContext';
 
 const BuyCourse = () => {
-    const {courses, user} = useContext(DataContext)
+    const {courses, user, showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const {id} = useParams();
     const course = courses?.find((course) => (course.id).toString() === id);
@@ -37,7 +37,6 @@ const BuyCourse = () => {
     const videoRef = useRef(null);
     const watchedFully = useRef(false);
     const count = progressDetail.map(progress => progress.video_index.length)
-    console.log("count",count)
     const handleVideoEnded = ()=>{
         watchedFully.current = true;
     }
@@ -46,7 +45,6 @@ const BuyCourse = () => {
         const fetchVideoCount = async()=>{
             if(user){
                 const response = await flashapi.get(`/get-completed-video/${user['id']}/${id}`)
-                console.log("completed-video-list",response.data)
                 setProgressDetail(response.data)
             }
         }
@@ -59,11 +57,10 @@ const BuyCourse = () => {
     useEffect(()=>{
         const updateVideoProgress = async()=>{
             try {
-                console.log("first.....,")
                 const response = await flashapi.post(`/add-completed-video/${videoIndex}/${user['id']}`,{course_id:course.id})
-                console.log("response of adding completed video: ",response.data)
+                showFlashMessage(response.data.message, "success")
             } catch (error) {
-                console.log('error at adding: ',error)
+                showFlashMessage(error.response.data.response, "error")
             }
         }
         if(watchedFully && videoWatched > videoCount){
@@ -111,7 +108,6 @@ const BuyCourse = () => {
             }
             }
             setVideoCount(count);
-          console.log("count", count);
         };
       
         fetchVideoCount();
@@ -126,15 +122,14 @@ const BuyCourse = () => {
         }
         try {
             const response = await flashapi.post('/add-user-review',review_detail);
-            console.log(response.data)
+            showFlashMessage(response.data?.message, "success")
             setUserReview(true);
             setHoverStar(0);
             setReview('');
         } catch (error) {
-            console.log("error found at posting user",error)
+            showFlashMessage("error found at posting user","error")
         }
       }
-      count.map((complete => console.log("complete->", complete.completed)));
   return (
     <main>
         <div className="buycourse-container">
@@ -165,7 +160,6 @@ const BuyCourse = () => {
                         <div className="review" onClick={()=>handleActiveRating()}>
                             <FaStar /> Leave a rating
                         </div>
-                        {console.log("videovount:",videoCount)}
                         <div className='progress-bar-container'><CircularProgressbar className='progress-bar' value={count} maxValue={videoCount} text={`${Math.ceil((count/videoCount) * 100)}%`} /></div>
                         <p onMouseEnter={()=>setProgress(true)} onMouseLeave={()=>setProgress(false)}>Your Progress</p>
                         {
@@ -209,7 +203,6 @@ const BuyCourse = () => {
                             <h3>How would you rate this course?</h3>
                             <p>Select rating</p>
                             <p className='stars' onMouseLeave={() => handleStarLeave}>
-                            {console.log(hoverStar)}
                             {[...Array(5)].map((_, index) => (
                                 <FaStar
                                 key={index}

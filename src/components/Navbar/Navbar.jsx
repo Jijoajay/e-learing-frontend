@@ -9,9 +9,7 @@ import { DataContext } from '../context/DataContext';
 import { RxCross1 } from "react-icons/rx";
 import { motion } from 'framer-motion';
 const Navbar = () => {
-    const {search,setSearch,handleSubmit,authenticate,setAuthenticate, courses, boughtCourses, favour,favourite,info, flashMessage,hideFlashMessage} = useContext(DataContext)
-    console.log("search:", search);
-    console.log("courses:", courses);
+    const {search,setSearch,handleSubmit,authenticate,setAuthenticate, courses, boughtCourses, favour,favourite,info, flashMessage,hideFlashMessage,showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false)
     const [active, setActive] = useState('home')
@@ -23,9 +21,7 @@ const Navbar = () => {
     }
     const handleLogOut = async()=>{
         const token = localStorage.getItem("token")
-        console.log("token",token);
         try{
-            if(!token)console.log("No token found")
             await flashapi.post("/logout",{},{
                 headers: {
                     "Authorization":`Bearer ${token}`
@@ -41,13 +37,10 @@ const Navbar = () => {
                     setAuthenticate(false)
                     navigate('/sign-in')
                 }else{
-                    console.log(err.response.data);
-                    console.log(err.response.status);
+                   showFlashMessage(err.response.data.message);
                 }
-            } else if (err.request) {
-                console.error(err.request);
             } else {
-                console.error(err.message);
+                showFlashMessage(err.response.data.message);
             }
 
             }
@@ -71,10 +64,9 @@ const Navbar = () => {
         try {
             navigate('/user')
         } catch (error) {
-            console.log(error);
+            showFlashMessage(error.response.data.message);
         }
     }
-    console.log("boughtCourse",boughtCourses)
   return (
     <nav className='nav'>
         <div className="logo">
@@ -160,7 +152,6 @@ const Navbar = () => {
             <div className="hamburger-menu">
             <GiHamburgerMenu onClick={handleMenuClick} className='menu'/>
             </div>
-            {console.log("flashMessage.message")}
             {flashMessage.message &&
             <motion.div className={`flash ${flashMessage.category}`} 
             initial={{opacity : 0}}

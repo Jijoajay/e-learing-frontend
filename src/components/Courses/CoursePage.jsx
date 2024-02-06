@@ -9,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import {motion} from "framer-motion";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { DataContext } from '../context/DataContext';
+import { FlashMessage } from '../FlashMessage';
 
 const CoursePage = () => {
-    const {courses, user, handleRemoveCourse, boughtCourses,favour,handleClick} = useContext(DataContext)
+    const {courses, user, handleRemoveCourse, boughtCourses,favour,handleClick,showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const [paidUser, setPaidUser] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -62,8 +63,13 @@ const CoursePage = () => {
                     try {
                         const response =  flashapi.post('/purchase_course', {user_id:user['id'], course_id:course.id})
                         navigate(`/course/${course.id}`);
+                        if(response.status === 201){
+                            showFlashMessage(response.data.message, "success")
+                        }else if(response.status === 404){
+                            showFlashMessage(response.data.message, "warning")
+                        }
                     } catch (error) {
-                        console.error(error);
+                        showFlashMessage(error.message, "error");
                     }
                 },
                 prefill:{
@@ -80,14 +86,13 @@ const CoursePage = () => {
             }
             if (window.Razorpay) {
                 const razorpayInstance = new window.Razorpay(options);
-                console.log("razorpayInstance",razorpayInstance)
                 razorpayInstance.open();
               } else {
-                console.error('Razorpay script not loaded.');
+                showFlashMessage('Razorpay script not loaded.', "error");
               }
         }
         catch(err){
-            console.log(err)
+            showFlashMessage(err.message, "error")
         }}
     };
 

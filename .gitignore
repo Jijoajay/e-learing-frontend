@@ -4,7 +4,16 @@
 /node_modules
 /.pnp
 .pnp.js
-
+.idea/
+.vscode/
+__pycache__/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+docs/_build/
+dist/
+venv/
 # testing
 /coverage
 

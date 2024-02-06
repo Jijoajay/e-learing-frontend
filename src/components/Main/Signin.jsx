@@ -4,7 +4,7 @@ import flashapi from '../api/flashapi'
 import { useContext } from 'react'
 import { DataContext} from '../context/DataContext'
 const Signin = () => {
-  const {setAuthenticate} = useContext(DataContext)
+  const {setAuthenticate,showFlashMessage} = useContext(DataContext)
   const [loginEmail, setLoginEmail] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
   const navigate = useNavigate();
@@ -15,19 +15,18 @@ const Signin = () => {
       const response =  await flashapi.post('/login',{
         email:loginEmail,password:loginPassword
       })
-      console.log(response.status);
       if(response.status === 201){
         localStorage.setItem("token",response.data.tokens);
-        console.log("loggedIn:",response.data);
+        showFlashMessage(response.data.message, "success");
         setAuthenticate(true)
         navigate('/')
         setLoginEmail("")
         setLoginPassword("")
       }else{
-        alert("Invalid Email or Password")
+        showFlashMessage("Invalid Email or Password", "error")
       }
-    }catch(err){
-      console.log(err.message);
+    }catch(error){
+      showFlashMessage(error.message, "error");
     }
     }
   return (

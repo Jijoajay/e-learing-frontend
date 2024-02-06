@@ -10,7 +10,7 @@ import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { DataContext} from '../context/DataContext'
 
 const AddNewCourse = () => {
-    const {courses,setCourses, user} = useContext(DataContext)
+    const {courses,setCourses, user, showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const [currentSection, setCurrentSection] = useState(1)
     const [courseName , setCourseName] = useState("")
@@ -44,18 +44,15 @@ const AddNewCourse = () => {
 
     const handleSubmit = async(e)=>{
         if(e)e.preventDefault();
-        console.log("handleSubmit process started");
         let newCourse = null;
         if(imgFile){
             const imgRef = ref(storage, `course-img/${imgFile.name}`)
             try{
                 await uploadBytes(imgRef, imgFile);
                 const imgUrl = await getDownloadURL(imgRef)
-                console.log("imgLink", imgUrl);
                 setImg(imgUrl);
-                alert("uploaded submitted successfully")
+                showFlashMessage("uploaded submitted successfully", "success")
                 const id = courses.length ? courses[courses.length -1].id + 1 : 0 ;
-                console.log("img1",img)
                 newCourse = {
                     "id":id,
                     "admin_id": user['id'],
@@ -69,9 +66,9 @@ const AddNewCourse = () => {
                     "whatYouLearn": learningPoint, 
                     "videoContent": videoContent
                 }
-                console.log("saving details in the database");
+                showFlashMessage("saving details in the database", "success");
             }catch(err){
-                console.log(err)
+                showFlashMessage(err.response.data.message, "error")
             }
         }
         try {
@@ -83,14 +80,14 @@ const AddNewCourse = () => {
               setCourseAuthor("");
               setOldPrice("");
               setNewPrice("");
-              console.log(newCourse);
               navigate('/courses');
+              showFlashMessage(response.data.message, "success")
             } else {
               // Handle the case when there is no imgFile
-              console.log("No imgFile, cannot create newCourse");
+              showFlashMessage("No imgFile, cannot create newCourse", "error");
             }
           } catch (err) {
-            console.log(`handleSubmit:Error:${err}`);
+            showFlashMessage(err.message, "errors");
           }
     }
   return (

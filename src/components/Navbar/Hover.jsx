@@ -8,7 +8,7 @@ import { CourseItem } from '../Courses/CourseItem';
 
 const Hover = ({boughtCourses,favour,isHover,menu,setIsHover,title,handleMouseEnter,
     handleMouseLeave,setActive,handleFavouriteClick, handleRemoveCourse}) => {
-        const course = boughtCourses.map((course)=>course.course)
+        const course = boughtCourses?.map((course)=>course.course)
     return (
     <>
     <div 

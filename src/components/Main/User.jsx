@@ -6,7 +6,7 @@ import { ViewProfile } from './ViewProfile';
 import { DataContext} from '../context/DataContext';
 
 const User = () => {
-    const {user, favour, handleClick, favourite,courses,info} = useContext(DataContext)
+    const {user, favour, handleClick, favourite,courses,info, showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -37,7 +37,6 @@ const User = () => {
     }
 
     const handleSubmit = async(e)=>{
-        console.log("its working here but...");
         if(e)e.preventDefault();
         const userData = {
              "firstName":firstName,
@@ -52,11 +51,10 @@ const User = () => {
          }
         try {
             const response = await flashapi.post(`/add-user-detail/${user['id']}`, userData)
-            console.log(response.data);
+            showFlashMessage(response.data.message, "success");
             navigate('/')
-            alert(response.data.message)
         } catch (error) {
-            console.log(error);
+            showFlashMessage(error.message, "error")
         }
     }
     

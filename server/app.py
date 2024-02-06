@@ -1,15 +1,11 @@
-from flask import Flask,jsonify,request,session,make_response,abort
+from flask import Flask,jsonify,request,session,abort
 from model import VideoIndex,AdminInfo,Reply,Carousel, Message, SearchInfo, UserReview, UserVideoProgress, db, User, Course, Subtitle, VideoContent, WhatYouLearn, UserCourse, UserInfo,FavouriteInfo, Admin
-from flask_cors import CORS,cross_origin
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token,get_jwt_identity,jwt_required
-from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from sqlalchemy.exc import InvalidRequestError
 import stripe
 import uuid
 from datetime import timedelta
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import storage
 from flask_migrate import Migrate
 
 stripe.api_key = "sk_test_51No0dvSJ3G54P1mW5EShkwMsialXkmB0TpxKyuh6y2c9bSHI0996lFjDsUUY0tmCtz0BhpimCZs8RAu8Of7SZz0w00BYPOiUFB"
@@ -175,19 +171,6 @@ def logout_user():
                 return jsonify({
                     "message": "User not found"
                 }), 404
-    except ExpiredSignatureError as err:
-        print(f"JWTError: {str(err)}")
-        return jsonify({
-            "error": str(err),
-            "message": "Invalid or expired token"
-        }), 401
-    except InvalidTokenError as e:
-        # Print the details of the InvalidTokenError (401 Unauthorized)
-        print(f"InvalidTokenError: {str(e)}")
-        return jsonify({
-            "error": str(e),
-            "message": "Invalid token"
-        }), 401   
     except Exception as e:
         print(str(e))
         return jsonify({
@@ -417,7 +400,7 @@ def purchase():
             # Get the course name
             course_name = course.name
 
-            return jsonify({"message": "Course purchased successfully", "course_name": course_name}), 200
+            return jsonify({"message": "Course purchased successfully", "course_name": course_name}), 201
 
         return jsonify({"message": "User or course not found"}), 404
 
@@ -704,9 +687,9 @@ def search_result():
             db.session.commit()
             return jsonify({
                 "message":"search result added"
-            })
+            }),201
         else:
-            return jsonify({"message":"no user_id or search_result found"})
+            return jsonify({"message":"no user_id or search_result found"}),404
     except Exception as e:
         print(str(e))
         

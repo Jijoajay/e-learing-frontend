@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import flashapi from '../api/flashapi'
 import { DataContext } from '../context/DataContext'
 const Signup = () => {
-  const {user,setAuthenticate} = useContext(DataContext)
+  const {user,setAuthenticate,showFlashMessage} = useContext(DataContext)
   const [userName,setUserName] = useState("")
   const [userEmail,setUserEmail] = useState("")
   const [userPassword,setUserPassword] = useState("")
@@ -13,13 +13,11 @@ const Signup = () => {
 
   const handleSubmit = async(e)=>{
     e.preventDefault();
-    console.log("Users:",user)
     const newUser = {
       name:userName,
       email:userEmail,
       password:userPassword
     }
-    console.log(role);
     if(role === "student"){
       try{
         const response = await flashapi.post('/register',newUser);
@@ -31,16 +29,16 @@ const Signup = () => {
           setUserEmail("")
           setUserPassword("")
           setRole("")
+          showFlashMessage(response.data.message,"success")
         }
       }catch(err){
-        console.log(`error: ${err.message}`)
+        showFlashMessage(err.message, "error")
       }
     }else if(role === "admin"){
       try {
         const response = await flashapi.post('/admin-register',newUser);
         if(response.status === 201){
-          console.log(response.data);
-          console.log("token",response.data.tokens)
+          showFlashMessage(response.data.message, "success");
           localStorage.setItem("token",response.data.tokens)
           setAuthenticate(true)
           navigate('/')
@@ -48,9 +46,10 @@ const Signup = () => {
           setUserEmail("")
           setUserPassword("")
           setRole("")
+          showFlashMessage(response.data.message,"success")
         }
       }catch (error) {
-      console.log(`error: ${error.message}`)
+        showFlashMessage(error.message, "error")
     }
   }
 }

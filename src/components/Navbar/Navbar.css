@@ -399,6 +399,12 @@ hr{
   font-weight: 900;
   color: white;
 }
+.warning{
+  background-color: rgb(223, 210, 33);
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+}
 .success p{
   color: white;
 }

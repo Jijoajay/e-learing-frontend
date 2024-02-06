@@ -11,17 +11,13 @@ import MyLearning from "../MyLearning";
 import { DataContext} from "../context/DataContext";
 
 export const ViewProfile = ({ viewProfile}) => {
-    const {user, handleClick, favour, setViewProfile, favourite,courses, info, handleRemoveCourse} = useContext(DataContext)
+    const {user, handleClick, favour, setViewProfile, favourite,courses, info, handleRemoveCourse, showFlashMessage} = useContext(DataContext)
     const navigate = useNavigate();
     const saveMyLearning = JSON.parse(localStorage.getItem("myLearning")) || false ;
     const [myLearning, setMyLearning] = useState(saveMyLearning)
     const [fav, setFav] = useState(false);
     const [profile, setProfile] = useState([]);
-
     const {id} = useParams();
-
-    console.log(user ? user['id']:"null");
-
     useEffect(()=>{
         const fetchStorageData = async()=>{
             localStorage.setItem("mylearning",JSON.stringify(myLearning))
@@ -42,17 +38,14 @@ export const ViewProfile = ({ viewProfile}) => {
           try {
               const fetchUserInfo = async()=>{
                   const response = await flashapi.get(`/get_user_info/${id}`)
-                  console.log("paramsId", response.data)
                   setProfile([response.data])
               }
               fetchUserInfo();
           } catch (error) {
-              console.log("error at getting param id",error)
+              showFlashMessage(error.message, "error")
           }
       }
   },[id])
-  console.log(profile)
-  console.log(info)
   return (
         <main className="view-profile">
           {(profile.length > 0 ? profile : info).map((item, index) => (
@@ -92,7 +85,6 @@ export const ViewProfile = ({ viewProfile}) => {
               handleRemoveCourse={handleClick}
             />
           </div>
-          {/* <div className="black"></div> */}
         </main>
       );
     };

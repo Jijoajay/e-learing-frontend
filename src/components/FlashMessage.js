@@ -4,7 +4,6 @@ export const FlashMessage = ({message}) => {
   return (
     <div className='flash'>
             {message}
-            <RxCross1 />
     </div>
   )
 }

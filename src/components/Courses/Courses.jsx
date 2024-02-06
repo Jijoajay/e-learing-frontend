@@ -8,7 +8,7 @@ import { DataContext } from '../context/DataContext';
 
 
 const Courses = () => {
-  const { courses, searchResult, favour, handleClick, user , handleRemoveCourse} = useContext(DataContext)
+  const { courses, searchResult, favour, handleClick, user , handleRemoveCourse, showFlashMessage} = useContext(DataContext)
   const [courseByCategory, setCourseByCategory] = useState([]);
   const {category} = useParams();
   useEffect(() => {
@@ -19,14 +19,13 @@ const Courses = () => {
           const response = await flashapi.get(`/course/${category}`);
           setCourseByCategory(response.data);
         } catch (error) {
-          console.log(error);
+          showFlashMessage(error.message, "error");
         }
       };
       fetchCourse();
     }
   }, [category, courses, setCourseByCategory]);
   const filteredCourses = courseByCategory.length > 0 ? courseByCategory : searchResult;
-  console.log("favour",favour)
   return (
     <main className='course-page'>
       <div className="course-containers">

@@ -82,16 +82,9 @@ const Edit = () => {
             }
         }
         try{
-            console.log("editedCourse", editedCourse)
             const response = await flashapi.post(`/edit-courses/${id}`, editedCourse)
-            console.log("editData",response.data)
-            courses.map((course)=>{
-                console.log("course_id",course.id)
-                console.log("params_id",id)
-            })
             const editedCourses = courses.map(course => course.id === id ?{...response.data}:course)
             setCourses(editedCourses)
-            console.log("setEditedCourse",editedCourses)
             setEditName("")
             setEditAuthor("")
             setEditOldPrice("")
@@ -104,7 +97,6 @@ const Edit = () => {
 
     }
     useEffect(()=>{
-      console.log("pre-data")
         if(course){
             setEditName(course.name)
             setEditAuthor(course.author)

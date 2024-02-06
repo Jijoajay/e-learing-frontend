@@ -4,7 +4,7 @@ import { storage } from "../../firebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import flashapi from "../api/flashapi";
 import { Link } from "react-router-dom";
-const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
+const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage}) => {
     const [allMessage, setAllMessage] = useState([]);
     const [message, setMessage] = useState("");
     const [imgLink, setImgLink] = useState("");
@@ -38,7 +38,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
                     }
                 }
             } catch (error) {
-                console.log("error found at imgHandling", error)
+                showFlashMessage("error found at imgHandling", "error")
             }
         }else{
             if(user['role'] === "admin"){
@@ -61,7 +61,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
             setImgLink(null)
             setMessage('')
         } catch (error) {
-            console.log("error found at sender", error)
+            showFlashMessage(error.response.data.message, "error")
         }
     }
     const [replyStates, setReplyStates] = useState(allMessage.map(() => false));
@@ -77,7 +77,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
                 const res =  await flashapi.get(`/get-messages/${course.id}`);
                 setAllMessage(res.data)
             } catch (error) {
-                console.log("error found at gettin message", error)                
+                showFlashMessage(error.response.data.message, "error")
             }
         }
         fetchUserMessage();
@@ -86,8 +86,6 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
     try {
         const promises = allMessage.map(async (message) => {
             const res = await flashapi.get(`/get-reply/${message.id}`);
-            console.log("worked....")
-            console.log(res.data)
             return res.data;
         });
 
@@ -95,7 +93,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
         const flattenedReplies = allReplies.flat(); 
         setAllReply(flattenedReplies);
     } catch (error) {
-        console.error("Error fetching replies:", error);
+        showFlashMessage(error.response.data.message, "error")
     }
     };
     fetchUserReply();
@@ -121,10 +119,10 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user}) => {
                 }
             }
             const response = await flashapi.post(`/add-reply/${id}`, newReply)
-            console.log("response.data",response.data)
+            showFlashMessage(response.data.message, "success")
             setReply("");
         } catch (error) {
-            console.log("error found at reply sender", error)
+            showFlashMessage(error.response.data.message, "error")
         }
     }
 

@@ -1,10 +1,11 @@
 import React from 'react'
 import { IoHeart } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 
-export const CourseItem = ({courses,favour,isLearning, handleClick, handleRemoveCourse,user, myLearning}) => {
+export const CourseItem = ({courses,favour,isLearning, handleClick, handleRemoveCourse,user, myLearning, showFlashMessage}) => {
+    const history = useNavigate()
     return (
     <>
         {courses?.map((course,index) => (
@@ -24,7 +25,9 @@ export const CourseItem = ({courses,favour,isLearning, handleClick, handleRemove
                     ""
                 )
                 }
-                <Link to={`${!user? "/" : myLearning ? `/course/${course.id}` : `/courses/${course.id}`}`} key={course.id} style={{ textDecoration: 'none', color: 'black' }}
+                <Link to={`${myLearning ? `/course/${course.id}` : `/courses/${course.id}`}`} 
+                key={course.id} style={{ textDecoration: 'none', color: 'black' }}
+                // onClick = {()=>handleLinkClick(course.id)}
                 >
                 <img src={course.img} alt={course.name} />
                 </Link> 

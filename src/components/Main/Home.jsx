@@ -13,7 +13,7 @@ import { DataContext } from '../context/DataContext';
 
 
 const Home = () => {
-  const {courses, favour, handleClick,user} = useContext(DataContext)
+  const {courses, favour, handleClick,user, showFlashMessage} = useContext(DataContext)
   const [slide, setSlide] =useState([])
   const [isVisible, setIsVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0)
@@ -31,12 +31,10 @@ const Home = () => {
     ()=>{
       const fetchData = async()=>{
         try{
-          console.log("ooooo")
           const response = await flashapi.get('/get-carousel')
-          console.log("first", response.data)
           setSlide(response.data)
         }catch(err){
-          console.log("error at getting carousel", err.message);
+          showFlashMessage(err.response.data.message, "error");
         }
       }
       fetchData();
@@ -76,13 +74,9 @@ const Home = () => {
   
   useEffect(()=>{
     const getUserSearchHistory = async()=>{
-      try {
+      if(user){
         const response = await flashapi.post("/get-searchHistory",{user_id : user['id']});
-        console.log("searchHistory", response.data)
         setSearchHistory(response.data)
-        console.log("searchHistory", response.status)
-      } catch (error) {
-        console.log("error at getting user history")
       }
     }
     getUserSearchHistory();
@@ -94,8 +88,6 @@ const Home = () => {
     const allSearchResults = searchHistory.flatMap(history => history.search_result);
     setFilteredCourses(allSearchResults);
   }, [searchHistory]);
-  console.log("searchHisory",searchHistory)
-  console.log("filteredCourse",filteredCourse)
   return (
     <main className='home-page'>
     <div className="home">
@@ -103,7 +95,7 @@ const Home = () => {
        />
       {slide.map((slide, id) => (
        <AnimatePresence>
-        <motion.div style={{ background: `url(${slide.img})`, backgroundRepeat:'no-repeat', backgroundSize:'cover' }}  className={currentImage === id ? 'carousel' : 'no-carousel' 
+        <motion.div  style={{ background: `url(${slide.img})`, backgroundRepeat:'no-repeat', backgroundSize:'cover' }}  className={currentImage === id ? 'carousel' : 'no-carousel' 
       }
       key={id}
       img={slide.img}

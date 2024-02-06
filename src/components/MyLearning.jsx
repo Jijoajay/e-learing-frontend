@@ -28,9 +28,6 @@ const MyLearning = ({coursee, favs}) => {
         setShowFavourite(!showFavourite)
       }
     }
-    console.log('showCourse:', showCourse);
-    console.log('showFavourite:', showFavourite);
-    console.log('courses',boughtCourses);
     return (
     <main className='myLearning-page'>
       <div className="title">

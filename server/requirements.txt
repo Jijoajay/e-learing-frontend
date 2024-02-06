@@ -1,0 +1,9 @@
+Flask
+flask-cors
+flask-jwt-extended
+Flask-Migrate
+Flask-SQLAlchemy
+jwt
+SQLAlchemy
+stripe
+gunicorn
