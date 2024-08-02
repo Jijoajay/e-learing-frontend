@@ -1,7 +1,6 @@
 import React, {useContext, useState } from 'react';
 import IsFavourite from './Main/IsFavourite';
 import './MyLearning.css';
-import flashapi from './api/flashapi';
 import { CourseItem } from './Courses/CourseItem';
 import { DataContext} from './context/DataContext';
 

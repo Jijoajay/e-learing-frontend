@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import EditCourseDetail from './EditCourseDetail'
 import EditLearningDetail from './EditLearningDetail'
 import EditVideoContent from './EditVideoContent'
-import flashapi from '../api/flashapi'
+import fetch from '../api/fetch'
 import { storage } from '../../firebase'
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 
@@ -15,7 +15,7 @@ const Edit = () => {
     useEffect(()=>{
       const fetchCourseData = async()=>{
         try{
-          const response = await flashapi.get('/courses')
+          const response = await fetch.get('/courses')
           setCourses(response.data)
         }catch(err){
           console.log(err.message);
@@ -82,7 +82,7 @@ const Edit = () => {
             }
         }
         try{
-            const response = await flashapi.post(`/edit-courses/${id}`, editedCourse)
+            const response = await fetch.post(`/edit-courses/${id}`, editedCourse)
             const editedCourses = courses.map(course => course.id === id ?{...response.data}:course)
             setCourses(editedCourses)
             setEditName("")

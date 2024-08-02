@@ -2,7 +2,7 @@ import './Navbar.css'
 import React, { useContext, useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom';
 import { GiHamburgerMenu } from "react-icons/gi";
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import { FaUserAlt } from "react-icons/fa";
 import Hover, { CategoryHover, InfoHover} from './Hover';
 import { DataContext } from '../context/DataContext';
@@ -22,7 +22,7 @@ const Navbar = () => {
     const handleLogOut = async()=>{
         const token = localStorage.getItem("token")
         try{
-            await flashapi.post("/logout",{},{
+            await fetch.post("/logout",{},{
                 headers: {
                     "Authorization":`Bearer ${token}`
                 }

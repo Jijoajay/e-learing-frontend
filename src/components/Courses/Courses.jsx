@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import "./Courses.css";
 import { useContext, useEffect } from 'react';
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import { useState } from 'react';
 import { CourseItem } from './CourseItem';
 import { DataContext } from '../context/DataContext';
@@ -16,7 +16,7 @@ const Courses = () => {
       const coursesByCategory = courses?.find((course) => course.category === category);
       const fetchCourse = async () => {
         try {
-          const response = await flashapi.get(`/course/${category}`);
+          const response = await fetch.get(`/course/${category}`);
           setCourseByCategory(response.data);
         } catch (error) {
           showFlashMessage(error.message, "error");

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import IsFavourite from "./IsFavourite";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import flashapi from "../api/flashapi";
+import fetch from "../api/fetch";
 import { SocialIcons } from "./SocialIcons";
 import MyLearning from "../MyLearning";
 import { DataContext} from "../context/DataContext";
@@ -37,7 +37,7 @@ export const ViewProfile = ({ viewProfile}) => {
       if(id){
           try {
               const fetchUserInfo = async()=>{
-                  const response = await flashapi.get(`/get_user_info/${id}`)
+                  const response = await fetch.get(`/get_user_info/${id}`)
                   setProfile([response.data])
               }
               fetchUserInfo();

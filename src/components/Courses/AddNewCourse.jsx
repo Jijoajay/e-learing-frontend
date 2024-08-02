@@ -4,10 +4,10 @@ import CourseDetail from './CourseDetail'
 import LearningDetail from './LearningDetail'
 import VideoContent from './VideoContent'
 import { useNavigate } from 'react-router-dom'
-import flashapi from '../api/flashapi'
 import { storage } from '../../firebase'
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { DataContext} from '../context/DataContext'
+import fetch from '../api/fetch'
 
 const AddNewCourse = () => {
     const {courses,setCourses, user, showFlashMessage} = useContext(DataContext)
@@ -73,7 +73,7 @@ const AddNewCourse = () => {
         }
         try {
             if (newCourse) {
-              const response = await flashapi.post('/add-courses', newCourse);
+              const response = await fetch.post('/add-courses', newCourse);
               const allCourses = [...courses, response.data];
               setCourses(allCourses);
               setCourseName("");

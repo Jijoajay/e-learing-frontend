@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import './User.css';
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ViewProfile } from './ViewProfile';
 import { DataContext} from '../context/DataContext';
@@ -50,7 +50,7 @@ const User = () => {
              'profileImg':profileImg
          }
         try {
-            const response = await flashapi.post(`/add-user-detail/${user['id']}`, userData)
+            const response = await fetch.post(`/add-user-detail/${user['id']}`, userData)
             showFlashMessage(response.data.message, "success");
             navigate('/')
         } catch (error) {

@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from 'react'
 import {Link} from 'react-router-dom';
 import { useState } from 'react';
 import CourseVideopage from './CourseVideopage';
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import { useNavigate } from 'react-router-dom';
 import {motion} from "framer-motion";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -61,7 +61,7 @@ const CoursePage = () => {
                 description:"for testing purpose",
                 handler: function (response){
                     try {
-                        const response =  flashapi.post('/purchase_course', {user_id:user['id'], course_id:course.id})
+                        const response =  fetch.post('/purchase_course', {user_id:user['id'], course_id:course.id})
                         navigate(`/course/${course.id}`);
                         if(response.status === 201){
                             showFlashMessage(response.data.message, "success")

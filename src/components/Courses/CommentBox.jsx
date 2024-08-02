@@ -2,7 +2,7 @@ import { useState, useEffect, useRef} from "react";
 import React from 'react'
 import { storage } from "../../firebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import flashapi from "../api/flashapi";
+import fetch from "../api/fetch";
 import { Link } from "react-router-dom";
 const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage}) => {
     const [allMessage, setAllMessage] = useState([]);
@@ -56,7 +56,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage
             }
         }
         try {
-            await flashapi.post('/add-message',newMessage);
+            await fetch.post('/add-message',newMessage);
             setImg(null)
             setImgLink(null)
             setMessage('')
@@ -74,7 +74,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage
     useEffect(()=>{
         const fetchUserMessage = async()=>{
             try {
-                const res =  await flashapi.get(`/get-messages/${course.id}`);
+                const res =  await fetch.get(`/get-messages/${course.id}`);
                 setAllMessage(res.data)
             } catch (error) {
                 showFlashMessage(error.response.data.message, "error")
@@ -85,7 +85,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage
         const fetchUserReply = async () => {
     try {
         const promises = allMessage.map(async (message) => {
-            const res = await flashapi.get(`/get-reply/${message.id}`);
+            const res = await fetch.get(`/get-reply/${message.id}`);
             return res.data;
         });
 
@@ -118,7 +118,7 @@ const CommentBox = ({course, sectionIndex, subtitleIndex, user, showFlashMessage
                     course_id: course.id
                 }
             }
-            const response = await flashapi.post(`/add-reply/${id}`, newReply)
+            const response = await fetch.post(`/add-reply/${id}`, newReply)
             showFlashMessage(response.data.message, "success")
             setReply("");
         } catch (error) {

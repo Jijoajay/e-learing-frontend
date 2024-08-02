@@ -18,8 +18,9 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
+
 # session.init_app(app)
-CORS(app, origins="http://localhost:3000", supports_credentials=True)
+CORS(app, supports_credentials=True)
 expires = timedelta(days=1)
 
 @app.route('/users')
@@ -28,8 +29,7 @@ def users():
         user_email = session.get("user_email")
         if not user_email:
             return jsonify({
-                'error': 'not login',
-                "message": user_email
+                'error': 'not login'
             })
 
         user = User.query.filter_by(email=user_email).first()

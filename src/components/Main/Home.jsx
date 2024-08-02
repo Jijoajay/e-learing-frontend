@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useRef, useContext } from 'react'
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import './Home.css'
 import {FaArrowLeft, FaArrowRight} from 'react-icons/fa';
 import CourseSlider from '../Demo/CourseSlider';
@@ -31,8 +31,9 @@ const Home = () => {
     ()=>{
       const fetchData = async()=>{
         try{
-          const response = await flashapi.get('/get-carousel')
+          const response = await fetch.get('/get-carousel')
           setSlide(response.data)
+          console.log('slide',slide)
         }catch(err){
           showFlashMessage(err.response.data.message, "error");
         }
@@ -75,7 +76,7 @@ const Home = () => {
   useEffect(()=>{
     const getUserSearchHistory = async()=>{
       if(user){
-        const response = await flashapi.post("/get-searchHistory",{user_id : user['id']});
+        const response = await fetch.post("/get-searchHistory",{user_id : user['id']});
         setSearchHistory(response.data)
       }
     }

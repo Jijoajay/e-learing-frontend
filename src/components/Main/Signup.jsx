@@ -1,7 +1,7 @@
 import React, { useState ,useEffect, useContext} from 'react'
 // import api from "../api/fetch2"
 import { useNavigate } from 'react-router-dom'
-import flashapi from '../api/flashapi'
+import fetch from '../api/fetch'
 import { DataContext } from '../context/DataContext'
 const Signup = () => {
   const {user,setAuthenticate,showFlashMessage} = useContext(DataContext)
@@ -20,7 +20,7 @@ const Signup = () => {
     }
     if(role === "student"){
       try{
-        const response = await flashapi.post('/register',newUser);
+        const response = await fetch.post('/register',newUser);
         if(response.status === 201){
           localStorage.setItem("token",response.data.tokens)
           setAuthenticate(true)
@@ -36,7 +36,7 @@ const Signup = () => {
       }
     }else if(role === "admin"){
       try {
-        const response = await flashapi.post('/admin-register',newUser);
+        const response = await fetch.post('/admin-register',newUser);
         if(response.status === 201){
           showFlashMessage(response.data.message, "success");
           localStorage.setItem("token",response.data.tokens)

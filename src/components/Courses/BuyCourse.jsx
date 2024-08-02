@@ -10,7 +10,7 @@ import { FaStar } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import {motion, AnimatePresence} from  "framer-motion";
 import { DataContext } from '../context/DataContext';
 
@@ -44,7 +44,7 @@ const BuyCourse = () => {
     useEffect(()=>{
         const fetchVideoCount = async()=>{
             if(user){
-                const response = await flashapi.get(`/get-completed-video/${user['id']}/${id}`)
+                const response = await fetch.get(`/get-completed-video/${user['id']}/${id}`)
                 setProgressDetail(response.data)
             }
         }
@@ -54,10 +54,16 @@ const BuyCourse = () => {
         }
     },[setProgressDetail,watchedFully]);
 
+    const handleDropdownToggle = (index) => {
+        const newIsActive = [...isActive];
+        newIsActive[index] = !newIsActive[index];
+        setIsActive(newIsActive);
+    };
+    
     useEffect(()=>{
         const updateVideoProgress = async()=>{
             try {
-                const response = await flashapi.post(`/add-completed-video/${videoIndex}/${user['id']}`,{course_id:course.id})
+                const response = await fetch.post(`/add-completed-video/${videoIndex}/${user['id']}`,{course_id:course.id})
                 showFlashMessage(response.data.message, "success")
             } catch (error) {
                 showFlashMessage(error.response.data.response, "error")
@@ -77,12 +83,7 @@ const BuyCourse = () => {
       };
 
 
-    const handleDropdownToggle = (index) => {
-        setSectionIndex(index)
-        const newIsActive = [...isActive];
-        newIsActive[index] = !newIsActive[index];
-        setIsActive(newIsActive);
-      }; 
+  
     const handleClick = ()=>{
             setIsSideActive(!isSideActive)
     }
@@ -121,7 +122,7 @@ const BuyCourse = () => {
             review : review
         }
         try {
-            const response = await flashapi.post('/add-user-review',review_detail);
+            const response = await fetch.post('/add-user-review',review_detail);
             showFlashMessage(response.data?.message, "success")
             setUserReview(true);
             setHoverStar(0);

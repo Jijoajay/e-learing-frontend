@@ -15,8 +15,6 @@ import User from './components/Main/User';
 import { ViewProfile } from './components/Main/ViewProfile';
 import { DataProvider } from './components/context/DataContext';
 function App() {
-  
-
   return (
     <div className="App">
       <DataProvider>

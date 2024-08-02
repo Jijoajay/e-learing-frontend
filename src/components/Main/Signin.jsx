@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import flashapi from '../api/flashapi'
+import fetch from '../api/fetch'
 import { useContext } from 'react'
 import { DataContext} from '../context/DataContext'
 const Signin = () => {
@@ -12,7 +12,7 @@ const Signin = () => {
   const handleSubmit = async(e)=>{
     e.preventDefault();
     try {
-      const response =  await flashapi.post('/login',{
+      const response =  await fetch.post('/login',{
         email:loginEmail,password:loginPassword
       })
       if(response.status === 201){

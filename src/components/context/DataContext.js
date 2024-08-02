@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import flashapi from '../api/flashapi';
+import fetch from '../api/fetch';
 import {useNavigate, useLocation} from "react-router-dom"
 
 export const DataContext = createContext({});
@@ -33,7 +33,7 @@ export const DataProvider = ({children})=>{
     ()=>{
       const fetchCourseData = async()=>{
         try{
-          const response = await flashapi.get("/courses");
+          const response = await fetch.get("/courses");
           setCourses(response.data)
         }catch(err){
           showFlashMessage(err.response?.data?.message || "An error occurred", "error");
@@ -47,7 +47,7 @@ export const DataProvider = ({children})=>{
           const token = localStorage.getItem("token")
           if(token){
             try{
-              const response = await flashapi.get(`/user-data/${token}`)
+              const response = await fetch.get(`/user-data/${token}`)
               setUser(response.data)
             }catch(err){
               showFlashMessage(err.response?.data?.message);
@@ -69,14 +69,14 @@ export const DataProvider = ({children})=>{
     }
     const handleClick = async(course_id)=>{
       if(favour.includes(course_id)){
-        const response = await flashapi.post('/remove-from-favourite', {course_id:course_id, user_id:user['id']})
+        const response = await fetch.post('/remove-from-favourite', {course_id:course_id, user_id:user['id']})
         showFlashMessage(response.data.message, "success")
         const removeFavourite = favour.filter((data) => data !== course_id);
         setFavour(removeFavourite);
       }
       else{
         try{
-          const response = await flashapi.post('/add-to-favorite', {course_id:course_id, user_id:user['id']})
+          const response = await fetch.post('/add-to-favorite', {course_id:course_id, user_id:user['id']})
           showFlashMessage(response.data.message,"success")
           setFavour([...favour, course_id])
         }catch(err){
@@ -86,7 +86,7 @@ export const DataProvider = ({children})=>{
     }
    
   const handleRemoveCourse = async(course_id)=>{
-    const response = await flashapi.get(`/remove-course/${course_id}`)
+    const response = await fetch.get(`/remove-course/${course_id}`)
     showFlashMessage("Course deleted successfully");
   }
   useEffect(() => {
@@ -102,7 +102,7 @@ export const DataProvider = ({children})=>{
         };
         if(user){
           try {
-            const response = await flashapi.post('/user-searchresult', searchDetail);
+            const response = await fetch.post('/user-searchresult', searchDetail);
             if(response.status === 404){
               showFlashMessage(response?.data.message, "warning")
             }
@@ -120,7 +120,7 @@ export const DataProvider = ({children})=>{
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await flashapi.get(`/get_course/${user["id"]}`);
+            const response = await fetch.get(`/get_course/${user["id"]}`);
             setBoughtCourses(response.data.course ) 
         } catch (error) {
           showFlashMessage(error?.response?.data?.message || "Please Sign or register to get full experience", "error");
@@ -131,7 +131,7 @@ export const DataProvider = ({children})=>{
     const fetchFavouriteData = async()=>{
       try {
         if(user){
-          const response = await flashapi.get(`/get-favourite/${user['id']}`);
+          const response = await fetch.get(`/get-favourite/${user['id']}`);
           setFavourite(response.data.favourites);
           const favorCourseIds = response.data.favourites
           .flatMap((data) => data.course.id)
@@ -149,7 +149,7 @@ export const DataProvider = ({children})=>{
   useEffect(() => {
     const fetchUserInfoData = async()=>{
         try {
-            const response = await flashapi.get(`/get_user_info/${user["id"]}`)
+            const response = await fetch.get(`/get_user_info/${user["id"]}`)
             setInfo(Array(response.data))
         } catch (error) {
             showFlashMessage(error?.response?.data?.message || "Please Sign or register to get full experience", "error");
